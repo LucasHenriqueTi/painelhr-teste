@@ -1,12 +1,12 @@
 import './App.css'
-import {LoginContainer} from './pages/login/LoginContainer'
+import Page from './pages/dashboard/DashboardView'
 
 
 function App() {
 
   return (
     <>
-      <LoginContainer />
+      <Page />
     </>
   )
 }

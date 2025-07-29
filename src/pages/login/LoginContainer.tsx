@@ -3,7 +3,7 @@ import  LoginView  from "./LoginView";
 import { authService } from "@/services/signin-service";
 import { useMutation } from "@tanstack/react-query";
 
-export function LoginContainer() {
+const LoginContainer = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -20,7 +20,6 @@ export function LoginContainer() {
     }
   });
 
-  // 3. Simplifique a função handleSubmit
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     loginMutation.mutate({ username, password });
@@ -39,3 +38,5 @@ export function LoginContainer() {
     />
   );
 }
+
+export default LoginContainer;
