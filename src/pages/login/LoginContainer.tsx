@@ -1,22 +1,28 @@
 import { useState } from "react";
-import  LoginView  from "./LoginView";
-import { authService } from "@/services/signin-service";
+import LoginView from "./LoginView"; // Verifique o caminho
+import { authService } from "@/services/signin-service"; // Verifique o caminho
 import { useMutation } from "@tanstack/react-query";
+import { useAuthStore } from "@/store/authStore";
+import { useNavigate } from "@tanstack/react-router";
 
 const LoginContainer = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate({ from: '/login' });
+  const { login } = useAuthStore();
 
-  // 2. Configure o useMutation
   const loginMutation = useMutation({
     mutationFn: authService.signin, 
     onSuccess: (data) => {
-      alert(`Login bem-sucedido com React Query! Token: ${data.token}`);
-      console.log("SUCESSO:", data);
+      // Cria um objeto 'user' com os dados que temos
+      const userToStore = { username: data.username };
+      // Salva o usuário no store global
+      login(userToStore);
+      // Redireciona para o dashboard
+      navigate({ to: '/dashboard' });
     },
-
     onError: (error) => {
-        console.error("DEBUG: Erro capturado pelo React Query:", error.message);
+      console.error("Erro de login:", error.message);
     }
   });
 
@@ -25,7 +31,6 @@ const LoginContainer = () => {
     loginMutation.mutate({ username, password });
   };
 
-  // 4. Use os estados gerenciados pelo React Query
   return (
     <LoginView
       username={username}
@@ -37,6 +42,6 @@ const LoginContainer = () => {
       onSubmit={handleSubmit}
     />
   );
-}
+};
 
 export default LoginContainer;

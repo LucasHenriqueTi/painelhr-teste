@@ -1,24 +1,29 @@
-import { create } from "zustand";
-
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 interface User {
-    id: string;
-    name: string;
-    email: string;
-    avatar: string;
+  username: string;
 }
 
 interface AuthState {
-    user: User | null;
-    isAuthenticated: boolean;
-    Login: (user: User) => void;
-    Logout: () => void;
+  user: User | null;
+  isAuthenticated: boolean;
+  login: (user: User) => void;
+  logout: () => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-    user: null,
-    isAuthenticated: false,
-    Login: (user) => set ({ user, isAuthenticated: true}),
-    Logout: () => set ({ user: null, isAuthenticated: false}),
-}))
-
+export const useAuthStore = create<AuthState>()(
+  // `persist` vai salvar o estado (user, isAuthenticated) no localStorage.
+  // Quando o usuário recarregar a página, o Zustand vai ler esses dados.
+  persist(
+    (set) => ({
+      user: null,
+      isAuthenticated: false,
+      login: (user) => set({ user, isAuthenticated: true }),
+      logout: () => set({ user: null, isAuthenticated: false }),
+    }),
+    {
+      name: 'auth-session-storage', // Nome da chave no localStorage
+    }
+  )
+);
